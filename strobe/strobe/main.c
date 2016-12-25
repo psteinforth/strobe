@@ -8,6 +8,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <inttypes.h> //int8_t and similar datatypes
+#include <util/delay.h>
 
 #ifndef F_CPU
 /* Define CPU frequency F_CPU if F_CPU was not already defined 
@@ -23,6 +24,12 @@
    a Makefile). Warn if no frequency was passed by parameter. */
 #warning "F_TIMER_INT was not defined and will be set to 256"
 #define F_TIMER_INT 256UL     /* Interrupt called every 1000/F_TIMER_INT= x milliseconds */
+#endif
+#if F_TIMER_INT > 256
+#error "F_TIMER_INT must be in the range between 1 and 256 because we use a 8 bit variable."
+#endif
+#if F_TIMER_INT < 1
+#error "F_TIMER_INT must be in the range between 1 and 256 because we use a 8 bit variable."
 #endif
 
 #ifndef TIMER_PRESCALER
@@ -47,14 +54,33 @@ calculated next. We subtract 1 because timer period equals output compare regist
 //#define LED_BUZZER_ACTIVE PORTB0
 //#define BUZZER PORTB2
 
-uint8_t volatile fsm_next_state = 0; // 0=wait for key press, 1=buzzer locked, 2=blinking
-uint8_t volatile counter_seconds = 0;
-uint8_t volatile counter_minutes = 0;
+typedef enum {WAIT_FOR_KEYPRESS=0, BLINKING, BUZZER_LOCKED} state_t;
+	
+typedef struct {//0 = false/no, 1 = true/yes, -1 = don't care
+	//Outputs
+	int8_t buzzer_enabled; //(LED)
+	int8_t relais_enabled;
+	//Inputs / requirements for state transition
+	int8_t buzzer_pressed;
+	int8_t timer_counting;
+	//Next state
+	state_t next_state;
+	} strobe_state_t;
+
+int8_t volatile counter_seconds = 0;
+int8_t volatile counter_minutes = 0;
+int8_t volatile buzzer_was_pressed = 0;
 
 //Interrupt Service Routine for INT0
 ISR(EXT_INT0_vect)
 {
-	PINB = (1 << PINB0); //Toggle LED
+	buzzer_was_pressed = 1;
+	GIMSK &= ~(1 << INT0); //turn interrupt off, so we do not have to debounce the push-button
+_delay_ms(500);
+	if (GIFR & (1 << INTF0))
+	{
+		GIFR = (1 << INTF0);	
+	}	
 }
 
 //Interrupt Service Routine for timer 1 compare matches
@@ -63,9 +89,20 @@ ISR(TIM1_COMPA_vect)
 	    static uint8_t prescaler=(uint8_t)F_TIMER_INT;
 
 	    if( --prescaler == 0 ) {
-		    prescaler = (uint8_t)F_TIMER_INT;
-		    counter_seconds++;                               // one second is gone
-		    if( counter_seconds == 60 ) counter_seconds = 0;          // one minute is gone
+		    prescaler = (uint8_t)F_TIMER_INT;                             
+		    if( --counter_seconds <= 0 )                       
+			{
+				if (counter_minutes > 0)
+				{
+					counter_minutes--;
+					counter_seconds = 60;
+				}
+				else
+				{//we are done
+					TCCR1B &= ~(1 << CS12 | 1<< CS11 | 1 << CS10); //disable timer/counter
+					//TCNT1 = 0x0000; //clear counter (we use the clear timer on compare match mode)
+				}
+			}
 #if REST==0												//if there is a remainder
 	    }                                           
 #else
@@ -91,14 +128,13 @@ void init(void)
 	//if pin configured as output then PORTxn determines high (1) or low (0) state
 	//writing 1 to PINxn toggles value of PORTxn
 	PORTB = (1 << PORTB2);
-	DDRB = (1 << DDB0);
+	DDRB = (1 << DDB0 | 1 << DDB1);
 	//_NOP(); //nop for synchronisation
 	
 	//Configure Timer1
 	TCCR1B = (1 << WGM12); //clear timer on compare match
-	//TCCR1B |= (1 << CS10); //set prescaler to 1
 	OCR1A = OC_MATCH_VAL; //Set value for interrupt
-	//TIMSK1 = (1 << OCIE1A); //enable interrupt on compare match
+	TIMSK1 = (1 << OCIE1A); //enable interrupt on compare match
 	
 	//Enable interrupts globally
 	sei();
@@ -108,11 +144,79 @@ int main(void)
 {
 	init();
 	
+	state_t fsm_state = WAIT_FOR_KEYPRESS;
 	
+	strobe_state_t state_table[3] = {
+	   // buzzer_enabled
+	   // |   relais_enabled
+	   // |   |   buzzer_pressed
+	   // |   |   |   timer_counting
+	   // |   |   |   |  next_state
+		{ 1,  0,  1, -1, BLINKING}, //S_0 (WAIT_FOR_KEYPRESS)
+		{ 0,  1, -1,  0, BUZZER_LOCKED}, //S_1 (BLINKING)
+		{ 0,  0, -1,  0, WAIT_FOR_KEYPRESS}, //S_2 (BUZZER_LOCKED)
+	};
 	
-    /* Replace with your application code */
     while (1) 
     {
+		if (state_table[fsm_state].buzzer_enabled)
+		{
+			PORTB |= (1 << PORTB0); 
+		} 
+		else
+		{
+			PORTB &= ~(1 << PORTB0); 
+		}
+		if (state_table[fsm_state].relais_enabled)
+		{
+			PORTB |= (1 << PORTB1);
+		} 
+		else
+		{
+			PORTB &= ~(1 << PORTB1);
+		}
+		
+		if (
+			!(
+				(state_table[fsm_state].buzzer_pressed == -1 ) ||
+				(state_table[fsm_state].buzzer_pressed == 1 && buzzer_was_pressed) ||
+				(state_table[fsm_state].buzzer_pressed == 0 && !buzzer_was_pressed)
+			)
+		)
+		{
+			continue;
+		}
+		int8_t timer_is_running = TCCR1B & (1 << CS12 | 1 << CS11 | 1 << CS10);  //timer is active if at least one bit of CS12, CS11 or CS10 is set
+		if (
+			!(
+				(state_table[fsm_state].timer_counting == -1 ) ||
+				(state_table[fsm_state].timer_counting == 1 && timer_is_running) ||
+				(state_table[fsm_state].timer_counting == 0 && !timer_is_running)
+				)
+			)
+		{
+			continue;
+		}
+						
+		fsm_state = state_table[fsm_state].next_state;
+		if (fsm_state == WAIT_FOR_KEYPRESS)
+		{
+			GIMSK = (1 << INT0); //enable external interrupt
+		}
+		if (fsm_state == BLINKING)
+		{
+			buzzer_was_pressed = 0;
+			counter_minutes = 1;
+			counter_seconds = 10;
+			TCCR1B |= (1 << CS10); //set prescaler to 1 and enable timer/counter
+		}
+		if (fsm_state == BUZZER_LOCKED)
+		{
+			counter_minutes = 0;
+			counter_seconds = 7;
+			TCCR1B |= (1 << CS10); //set prescaler to 1 and enable timer/counter
+		}
+		
     }
 }
 
