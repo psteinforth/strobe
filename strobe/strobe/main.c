@@ -8,7 +8,6 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <inttypes.h> //int8_t and similar datatypes
-#include <util/delay.h>
 
 #ifndef F_CPU
 /* Define CPU frequency F_CPU if F_CPU was not already defined 
@@ -76,11 +75,6 @@ ISR(EXT_INT0_vect)
 {
 	buzzer_was_pressed = 1;
 	GIMSK &= ~(1 << INT0); //turn interrupt off, so we do not have to debounce the push-button
-_delay_ms(500);
-	if (GIFR & (1 << INTF0))
-	{
-		GIFR = (1 << INTF0);	
-	}	
 }
 
 //Interrupt Service Routine for timer 1 compare matches
@@ -201,19 +195,23 @@ int main(void)
 		fsm_state = state_table[fsm_state].next_state;
 		if (fsm_state == WAIT_FOR_KEYPRESS)
 		{
+			if (GIFR & (1 << INTF0))
+			{
+				GIFR = (1 << INTF0); //clear External Interrupt Flag
+			}
 			GIMSK = (1 << INT0); //enable external interrupt
 		}
 		if (fsm_state == BLINKING)
 		{
 			buzzer_was_pressed = 0;
-			counter_minutes = 1;
-			counter_seconds = 10;
+			counter_minutes = 0;
+			counter_seconds = 2;
 			TCCR1B |= (1 << CS10); //set prescaler to 1 and enable timer/counter
 		}
 		if (fsm_state == BUZZER_LOCKED)
 		{
 			counter_minutes = 0;
-			counter_seconds = 7;
+			counter_seconds = 4;
 			TCCR1B |= (1 << CS10); //set prescaler to 1 and enable timer/counter
 		}
 		
