@@ -64,6 +64,19 @@
 #error "MAX_BLINKING_TIME must be in the range between 1 and 255."
 #endif
 
+#ifndef MAX_BUZZER_LOCKED_TIME
+/* Define the maximum buzzer blocking time in TENs of seconds. This value will be set if potentiometer is in maximum position. 
+Example: A value of 37 results in a lock time of 37*10=370 seconds = 5 minutes 10 seconds*/
+#warning "MAX_BUZZER_LOCKED_TIME was not defined and will be set to 2"
+#define MAX_BUZZER_LOCKED_TIME 2
+#endif
+#if MAX_BUZZER_LOCKED_TIME > 255
+#error "MAX_BUZZER_LOCKED_TIME must be in the range between 1 and 255."
+#endif
+#if MAX_BUZZER_LOCKED_TIME < 1
+#error "MAX_BUZZER_LOCKED_TIME must be in the range between 1 and 255."
+#endif
+
 #define MAX_ADC_VALUE 256
 //Maximum value of ADC conversion. 256 because of 8 bit resolution.
 
@@ -212,6 +225,7 @@ void init(void)
 	//writing 1 to PINxn toggles value of PORTxn
 	PORTB = (1 << PORTB2);
 	DDRB = (1 << DDB0 | 1 << DDB1);
+	DDRA = (1 << DDA1); //DEBUG
 	//_NOP(); //nop for synchronisation
 	
 	//Configure Timer1
@@ -247,7 +261,7 @@ int main(void)
 	};
 	
     while (1) 
-    {
+    {PORTA |= (1 << DDA1); //Debug
 		if (state_table[fsm_state].buzzer_enabled)
 		{
 			PORTB |= (1 << PORTB0); 
@@ -299,15 +313,18 @@ int main(void)
 		if (fsm_state == BLINKING)
 		{
 			buzzer_was_pressed = 0;
-			counter_minutes = 0;
+			//counter_minutes = 0;
 			//counter_seconds = 2;
-			counter_seconds = trimmer_BLINKING / (MAX_ADC_VALUE / MAX_BLINKING_TIME);
+			counter_seconds = (trimmer_BLINKING / (MAX_ADC_VALUE / MAX_BLINKING_TIME)) % 60;
+			counter_minutes = (trimmer_BLINKING / (MAX_ADC_VALUE / MAX_BLINKING_TIME)) / 60;
 			TCCR1B |= (1 << CS10); //set prescaler to 1 and enable timer/counter
 		}
 		if (fsm_state == BUZZER_LOCKED)
 		{
-			counter_minutes = 0;
-			counter_seconds = 4;
+			//counter_minutes = 0;
+			//counter_seconds = 4;
+			counter_seconds = (int8_t)((uint16_t)(trimmer_BUZZER_LOCKED / (MAX_ADC_VALUE / (MAX_BUZZER_LOCKED_TIME * 10.0)))) % 60;
+			counter_minutes = (int8_t)((uint16_t)(trimmer_BUZZER_LOCKED / (MAX_ADC_VALUE / (MAX_BUZZER_LOCKED_TIME * 10.0)))) / 60;
 			TCCR1B |= (1 << CS10); //set prescaler to 1 and enable timer/counter
 		}
 		
