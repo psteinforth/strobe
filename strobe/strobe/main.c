@@ -1,5 +1,5 @@
 /*
- * strobe.c
+ * main.c
  *
  * Created: 22.12.2016 19:00:13
  * Author : Patrick Steinforth (dev@steinforth.eu)
@@ -40,6 +40,33 @@
 #define TIMER_PRESCALER 1UL     /* Timer counts every TIMER_PRESCALER clock cycle */
 #endif
 
+#ifndef ADC_AVERAGE_STEPS
+/* Define from how much analog digital conversions the average will be calculated. */
+#warning "ADC_AVERAGE_STEPS was not defined and will be set to 3"
+#define ADC_AVERAGE_STEPS 3
+#endif
+#if ADC_AVERAGE_STEPS > 31
+#error "ADC_AVERAGE_STEPS must be in the range between 1 and 31 so we can use one single 8 bit variable for all ADC[1:7] pins."
+#endif
+#if ADC_AVERAGE_STEPS < 1
+#error "ADC_AVERAGE_STEPS must be in the range between 1 and 31 so we can use one single 8 bit variable for all ADC[1:7] pins."
+#endif
+
+#ifndef MAX_BLINKING_TIME
+/* Define the maximum blinking time in seconds. This value will be set if potentiometer is in maximum position. */
+#warning "MAX_BLINKING_TIME was not defined and will be set to 30"
+#define MAX_BLINKING_TIME 30
+#endif
+#if MAX_BLINKING_TIME > 255
+#error "MAX_BLINKING_TIME must be in the range between 1 and 255."
+#endif
+#if MAX_BLINKING_TIME < 1
+#error "MAX_BLINKING_TIME must be in the range between 1 and 255."
+#endif
+
+#define MAX_ADC_VALUE 256
+//Maximum value of ADC conversion. 256 because of 8 bit resolution.
+
 #define OC_MATCH_VAL ((F_CPU / (TIMER_PRESCALER * F_TIMER_INT)) -1) 
 /* We count F_TIMER_INT times to the above calculated value. After that, one second is gone. Ok, this
 is not completely correct, we have to account for a divisions remainder in the last step. This will
@@ -69,6 +96,8 @@ typedef struct {//0 = false/no, 1 = true/yes, -1 = don't care
 int8_t volatile counter_seconds = 0;
 int8_t volatile counter_minutes = 0;
 int8_t volatile buzzer_was_pressed = 0;
+uint8_t volatile trimmer_BLINKING = 128;
+uint8_t volatile trimmer_BUZZER_LOCKED = 128;
 
 //Interrupt Service Routine for INT0
 ISR(EXT_INT0_vect)
@@ -107,6 +136,66 @@ ISR(TIM1_COMPA_vect)
 #endif
 }
 
+ISR(ADC_vect)
+{
+	static uint8_t adc_iteration = 0;
+	static uint16_t intermediate_result_BLINKING = 0;
+	static uint16_t intermediate_result_BUZZER_LOCKED = 0;
+	
+	switch(adc_iteration / (ADC_AVERAGE_STEPS + 1)) //get conversion for ADC pin 0..(USED_ADC_PINS-1), plus 1 because the first conversion result will be discarded
+	{
+		case 0: // PA3 respectively ADC3
+			if (adc_iteration % (ADC_AVERAGE_STEPS+1) == 0)
+			{
+				//First conversion result after ADC multiplexer change should be discarded
+				intermediate_result_BLINKING = 0; //init temp variable
+			}
+			else
+			{
+				intermediate_result_BLINKING += ADCH;
+			}
+			if (1 * (ADC_AVERAGE_STEPS+1) -1 == adc_iteration)
+			{
+				// last iteration for this ADC pin
+				trimmer_BLINKING = intermediate_result_BLINKING / ADC_AVERAGE_STEPS;
+				ADMUX &= ~(1 << MUX5 | 1 << MUX4 | 1 << MUX3 | 1 << MUX2 | 1 << MUX1 | 1 << MUX0);
+				ADMUX |= (1 << MUX1); //make conversion for other input next (ADC2)
+			}
+			ADCSRA |= (1 << ADSC); //do further conversion
+			adc_iteration++;
+			break;
+		case 1: // PA2 respectively ADC2
+			if (adc_iteration % (ADC_AVERAGE_STEPS+1) == 0)
+			{
+				//First conversion result after ADC multiplexer change should be discarded
+				intermediate_result_BUZZER_LOCKED = 0; //init temp variable
+			}
+			else
+			{
+				intermediate_result_BUZZER_LOCKED += ADCH;
+			}
+			if (2 * (ADC_AVERAGE_STEPS+1) -1 == adc_iteration)
+			{
+				// last iteration for this ADC pin
+				trimmer_BUZZER_LOCKED = intermediate_result_BUZZER_LOCKED / ADC_AVERAGE_STEPS;
+				ADMUX &= ~(1 << MUX5 | 1 << MUX4 | 1 << MUX3 | 1 << MUX2 | 1 << MUX1 | 1 << MUX0);
+				ADMUX |= (1 << MUX1 | 1 << MUX0); //make conversion for other input next (ADC3)
+				
+				//all ADC-pin values calculated. Re-init some variables, for the case that a new conversion will be started.
+				adc_iteration = 0;
+			}
+			else
+			{
+				adc_iteration++;
+				ADCSRA |= (1 << ADSC); //do further conversion
+			}
+			break;
+		default:
+			adc_iteration++;
+		//should never be reached
+	}
+}
+
 
 void init(void)
 {
@@ -130,6 +219,12 @@ void init(void)
 	OCR1A = OC_MATCH_VAL; //Set value for interrupt
 	TIMSK1 = (1 << OCIE1A); //enable interrupt on compare match
 	
+	//Configure Analog Digital Converter
+	DIDR0 = (1 << ADC3D | 1 << ADC2D); //Disable digital input to ADC pins (not required but reduces power consumption)
+	ADMUX = (1 << MUX1 | 1 << MUX0); //Select ADC3 as input for ADC
+	ADCSRB = (1 << ADLAR); //Left adjust conversion result (so it's possible to read the 8 most significant bits in a easy way, 10 bit resolution not required)
+	ADCSRA = (1 << ADPS1 | 1 << ADPS0 | 1 << ADIE | 1 << ADEN | 1 << ADSC); //Set ADC prescaler to 8; enable ADC interrupt; enable ADC; start conversion
+		
 	//Enable interrupts globally
 	sei();
 }
@@ -205,7 +300,8 @@ int main(void)
 		{
 			buzzer_was_pressed = 0;
 			counter_minutes = 0;
-			counter_seconds = 2;
+			//counter_seconds = 2;
+			counter_seconds = trimmer_BLINKING / (MAX_ADC_VALUE / MAX_BLINKING_TIME);
 			TCCR1B |= (1 << CS10); //set prescaler to 1 and enable timer/counter
 		}
 		if (fsm_state == BUZZER_LOCKED)
