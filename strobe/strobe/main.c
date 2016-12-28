@@ -78,6 +78,26 @@ Example: A value of 37 results in a lock time of 37*10=370 seconds = 5 minutes 1
 #error "MAX_BUZZER_LOCKED_TIME must be in the range between 1 and 255."
 #endif
 
+#ifndef MAX_BUZZER_LOCKED_ADJUSTMENT
+/* Define the maximum time range by which the buzzer lock time can be adjusted with potentiometer
+ in TENs of seconds. If MAX_BUZZER_LOCKED_TIME is greater than MAX_BUZZER_LOCKED_ADJUSTMENT, the
+ buzzer lock time can be adjusted in the interval from 
+ (MAX_BUZZER_LOCKED_TIME - MAX_BUZZER_LOCKED_ADJUSTMENT) to MAX_BUZZER_LOCKED_TIME. This makes it
+ easier to control the buzzer lock time with the potentiometer to the correct value.
+Example: MAX_BUZZER_LOCKED_TIME = 45 (450 seconds), MAX_BUZZER_LOCKED_ADJUSTMENT = 30 (300 seconds).
+ This results in a buzzer lock time interval from 15 (150 seconds) to 45 (450 seconds) that can be
+ selected by potentiometer.*/
+#warning "MAX_BUZZER_LOCKED_ADJUSTMENT was not defined and will be set to 30"
+#define MAX_BUZZER_LOCKED_ADJUSTMENT 30
+#endif
+#if MAX_BUZZER_LOCKED_ADJUSTMENT > 255
+#error "MAX_BUZZER_LOCKED_ADJUSTMENT must be in the range between 1 and 255."
+#endif
+#if MAX_BUZZER_LOCKED_ADJUSTMENT < 1
+#error "MAX_BUZZER_LOCKED_ADJUSTMENT must be in the range between 1 and 255."
+#endif
+
+
 #define MAX_ADC_VALUE 256
 //Maximum value of ADC conversion. 256 because of 8 bit resolution.
 
@@ -132,7 +152,7 @@ ISR(TIM1_COMPA_vect)
 				if (counter_minutes > 0)
 				{
 					counter_minutes--;
-					counter_seconds = 60;
+					counter_seconds = 59;
 				}
 				else
 				{//we are done
@@ -249,10 +269,11 @@ void init(void)
 }
 
 int main(void)
-{
+{	
 	init();
 	
 	state_t fsm_state = WAIT_FOR_KEYPRESS;
+	uint16_t adjustable_BUZZER_LOCKED_time = 0;
 	
 	strobe_state_t state_table[3] = {
 	   // buzzer_enabled
@@ -320,26 +341,44 @@ int main(void)
 		if (fsm_state == BLINKING)
 		{
 			buzzer_was_pressed = 0;
-			//counter_minutes = 0;
-			//counter_seconds = 2;
+
 			counter_seconds = (trimmer_BLINKING / (MAX_ADC_VALUE / MAX_BLINKING_TIME)) % 60;
 			counter_minutes = (trimmer_BLINKING / (MAX_ADC_VALUE / MAX_BLINKING_TIME)) / 60;
 			if (counter_minutes <= 0 && counter_seconds <= 0)
 			{
 				counter_seconds = 1; //at least 1 second in BLINKING state
 			}
+			//counter_minutes = 0;
+			//counter_seconds = 2;
 			TCCR1B |= (1 << CS10); //set prescaler to 1 and enable timer/counter
 		}
 		if (fsm_state == BUZZER_LOCKED)
-		{
-			//counter_minutes = 0;
-			//counter_seconds = 4;
-			counter_seconds = (uint8_t)((uint16_t)(trimmer_BUZZER_LOCKED / (MAX_ADC_VALUE / (MAX_BUZZER_LOCKED_TIME * 10.0)))) % 60;
-			counter_minutes = (uint8_t)((uint16_t)(trimmer_BUZZER_LOCKED / (MAX_ADC_VALUE / (MAX_BUZZER_LOCKED_TIME * 10.0)))) / 60;
+		{		
+			if (MAX_BUZZER_LOCKED_TIME > MAX_BUZZER_LOCKED_ADJUSTMENT)
+			{
+				adjustable_BUZZER_LOCKED_time = (uint16_t)(trimmer_BUZZER_LOCKED / (MAX_ADC_VALUE / (MAX_BUZZER_LOCKED_ADJUSTMENT * 10.0)));
+			}
+			else
+			{
+				adjustable_BUZZER_LOCKED_time = (uint16_t)(trimmer_BUZZER_LOCKED / (MAX_ADC_VALUE / (MAX_BUZZER_LOCKED_TIME * 10.0)));
+			}
+
+			if (MAX_BUZZER_LOCKED_TIME > MAX_BUZZER_LOCKED_ADJUSTMENT)
+			{
+				adjustable_BUZZER_LOCKED_time += ((uint16_t)(MAX_BUZZER_LOCKED_TIME - MAX_BUZZER_LOCKED_ADJUSTMENT)) * 10;
+			}
+
+			counter_seconds = (uint8_t)(adjustable_BUZZER_LOCKED_time % 60);
+			counter_minutes = (uint8_t)(adjustable_BUZZER_LOCKED_time / 60);
+			
 			if (counter_minutes <= 0 && counter_seconds <= 0)
 			{
 				counter_seconds = 1; //at least 1 second in BUZZER_LOCKED state
 			}
+
+// 			counter_minutes = 10;
+// 			counter_seconds = 35;
+
 			TCCR1B |= (1 << CS10); //set prescaler to 1 and enable timer/counter
 		}
 		
