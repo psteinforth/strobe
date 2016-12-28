@@ -8,6 +8,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <inttypes.h> //int8_t and similar datatypes
+#include <avr/wdt.h> //watchdog
 
 #ifndef F_CPU
 /* Define CPU frequency F_CPU if F_CPU was not already defined 
@@ -54,8 +55,8 @@
 
 #ifndef MAX_BLINKING_TIME
 /* Define the maximum blinking time in seconds. This value will be set if potentiometer is in maximum position. */
-#warning "MAX_BLINKING_TIME was not defined and will be set to 30"
-#define MAX_BLINKING_TIME 30
+#warning "MAX_BLINKING_TIME was not defined and will be set to 20"
+#define MAX_BLINKING_TIME 20
 #endif
 #if MAX_BLINKING_TIME > 255
 #error "MAX_BLINKING_TIME must be in the range between 1 and 255."
@@ -106,8 +107,8 @@ typedef struct {//0 = false/no, 1 = true/yes, -1 = don't care
 	state_t next_state;
 	} strobe_state_t;
 
-int8_t volatile counter_seconds = 0;
-int8_t volatile counter_minutes = 0;
+uint8_t volatile counter_seconds = 0;
+uint8_t volatile counter_minutes = 0;
 int8_t volatile buzzer_was_pressed = 0;
 uint8_t volatile trimmer_BLINKING = 128;
 uint8_t volatile trimmer_BUZZER_LOCKED = 128;
@@ -196,6 +197,7 @@ ISR(ADC_vect)
 				
 				//all ADC-pin values calculated. Re-init some variables, for the case that a new conversion will be started.
 				adc_iteration = 0;
+				ADCSRA &= ~(1 << ADEN); //turn ADC off
 			}
 			else
 			{
@@ -224,8 +226,9 @@ void init(void)
 	//if pin configured as output then PORTxn determines high (1) or low (0) state
 	//writing 1 to PINxn toggles value of PORTxn
 	PORTB = (1 << PORTB2);
+	PORTB |= (1 << PORTB3); //activate pull-up resistors for unused pins
+	PORTA |= (1 << PORTA7 | 1 << PORTA6 | 1 << PORTA5 | 1 << PORTA4 | 1 << PORTA1 | 1 << PORTA0); //activate pull-up resistors for unused pins
 	DDRB = (1 << DDB0 | 1 << DDB1);
-	DDRA = (1 << DDA1); //DEBUG
 	//_NOP(); //nop for synchronisation
 	
 	//Configure Timer1
@@ -239,6 +242,8 @@ void init(void)
 	ADCSRB = (1 << ADLAR); //Left adjust conversion result (so it's possible to read the 8 most significant bits in a easy way, 10 bit resolution not required)
 	ADCSRA = (1 << ADPS1 | 1 << ADPS0 | 1 << ADIE | 1 << ADEN | 1 << ADSC); //Set ADC prescaler to 8; enable ADC interrupt; enable ADC; start conversion
 		
+	WDTCSR = (1 << WDE | 1 << WDP1 | 1 << WDP0); // Enable watchdog with 16K watchdog oscillator (128 kHz) cycles --> 0.125s until reset. CPU cycles within 0.125s: 1000000/(1/0.125)=125000
+
 	//Enable interrupts globally
 	sei();
 }
@@ -261,7 +266,9 @@ int main(void)
 	};
 	
     while (1) 
-    {PORTA |= (1 << DDA1); //Debug
+    {
+		wdt_reset();
+
 		if (state_table[fsm_state].buzzer_enabled)
 		{
 			PORTB |= (1 << PORTB0); 
@@ -317,14 +324,22 @@ int main(void)
 			//counter_seconds = 2;
 			counter_seconds = (trimmer_BLINKING / (MAX_ADC_VALUE / MAX_BLINKING_TIME)) % 60;
 			counter_minutes = (trimmer_BLINKING / (MAX_ADC_VALUE / MAX_BLINKING_TIME)) / 60;
+			if (counter_minutes <= 0 && counter_seconds <= 0)
+			{
+				counter_seconds = 1; //at least 1 second in BLINKING state
+			}
 			TCCR1B |= (1 << CS10); //set prescaler to 1 and enable timer/counter
 		}
 		if (fsm_state == BUZZER_LOCKED)
 		{
 			//counter_minutes = 0;
 			//counter_seconds = 4;
-			counter_seconds = (int8_t)((uint16_t)(trimmer_BUZZER_LOCKED / (MAX_ADC_VALUE / (MAX_BUZZER_LOCKED_TIME * 10.0)))) % 60;
-			counter_minutes = (int8_t)((uint16_t)(trimmer_BUZZER_LOCKED / (MAX_ADC_VALUE / (MAX_BUZZER_LOCKED_TIME * 10.0)))) / 60;
+			counter_seconds = (uint8_t)((uint16_t)(trimmer_BUZZER_LOCKED / (MAX_ADC_VALUE / (MAX_BUZZER_LOCKED_TIME * 10.0)))) % 60;
+			counter_minutes = (uint8_t)((uint16_t)(trimmer_BUZZER_LOCKED / (MAX_ADC_VALUE / (MAX_BUZZER_LOCKED_TIME * 10.0)))) / 60;
+			if (counter_minutes <= 0 && counter_seconds <= 0)
+			{
+				counter_seconds = 1; //at least 1 second in BUZZER_LOCKED state
+			}
 			TCCR1B |= (1 << CS10); //set prescaler to 1 and enable timer/counter
 		}
 		
