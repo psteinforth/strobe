@@ -19,14 +19,19 @@
 		<transition>
 			<from>0</from>
 			<to>0</to>
-			<controlx>273</controlx>
-			<controly>66</controly>
 			<read>1x</read>
 		</transition>
 		<transition>
 			<from>2</from>
 			<to>2</to>
 			<read>x1</read>
+		</transition>
+		<transition>
+			<from>1</from>
+			<to>2</to>
+			<controlx>468</controlx>
+			<controly>215</controly>
+			<read>x0</read>
 		</transition>
 		<transition>
 			<from>1</from>
@@ -40,13 +45,6 @@
 			<to>0</to>
 			<controlx>302</controlx>
 			<controly>220</controly>
-			<read>x0</read>
-		</transition>
-		<transition>
-			<from>1</from>
-			<to>2</to>
-			<controlx>468</controlx>
-			<controly>215</controly>
 			<read>x0</read>
 		</transition>
 		<transition>

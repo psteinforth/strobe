@@ -12,7 +12,6 @@ This piece of software was designed to enable a cheap LED stroboscope by people 
 - Status LED for "push button active/ strobe can be enabled" and "strobe active".
 - Automatic reset if microcontroller hang-up by watchdog timer within 0.125 seconds.
 
-## Documentation
 ### Details
 - Some options are configurable by **preprocessor defines**. Default values will be used if they are not given. Meaning of preprocessor defines can be found in source code comments.
 - Program sequence is controlled by a **Finite State Machine**
@@ -31,7 +30,7 @@ S_1 | BLINKING | 0 | 1 | -1 | 0 | BUZZER_LOCKED
 S_2 | BUZZER_LOCKED | 0 | 0 | -1 | 0 | WAIT_FOR_KEYPRESS
 
 State transition diagram:
-![](FSM.png?raw=true)
+![](doc/FSM.png?raw=true)
 
 - All **time periods** are counted  by 16-bit Timer/Counter 1
 - **Push-putton** presses are detected by external interrupt INT0
