@@ -29,7 +29,7 @@ S_0 | WAIT_FOR_KEYPRESS | 1 | 0 | 1 | -1 | BLINKING
 S_1 | BLINKING | 0 | 1 | -1 | 0 | BUZZER_LOCKED
 S_2 | BUZZER_LOCKED | 0 | 0 | -1 | 0 | WAIT_FOR_KEYPRESS
 
-State transition diagram (arrows are labeled with inputs that are required for transition change):
+State transition diagram (arrows are labeled with inputs that are required for state change):
 ![](doc/FSM.png?raw=true)
 
 - All **time periods** are counted  by 16-bit Timer/Counter 1
