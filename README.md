@@ -2,7 +2,7 @@
 ATtiny microcontroller project to control a cheap stroboscope or similar device. 
 
 ### Introduction
-This piece of software was designed to enable a cheap LED stroboscope by people on a danceflor. The strobe flashes as long as it is powered. The idea was to enable the strobe for a fixed time period as soon as a dancer presses a red push-button. To avoid nearly continuous flashing due to drunken people :dancers: the strobe can be reenabled not before a configurable time period passed.
+This piece of software was designed to enable a cheap LED stroboscope by people on a danceflor. The strobe flashes as long as it is powered. The idea was to enable the strobe for a fixed time period as soon as a dancer presses a red push-button. To avoid nearly continuous flashing due to drunken people :dancers: the strobe can not be reenabled before a configurable time period passed.
 
 ### Features
 - Based on Atmel ATtiny 44A-PU microcontroller.
@@ -29,7 +29,7 @@ S_0 | WAIT_FOR_KEYPRESS | 1 | 0 | 1 | -1 | BLINKING
 S_1 | BLINKING | 0 | 1 | -1 | 0 | BUZZER_LOCKED
 S_2 | BUZZER_LOCKED | 0 | 0 | -1 | 0 | WAIT_FOR_KEYPRESS
 
-State transition diagram:
+State transition diagram (arrows are labeled with inputs that are required for transition change):
 ![](doc/FSM.png?raw=true)
 
 - All **time periods** are counted  by 16-bit Timer/Counter 1
@@ -38,6 +38,7 @@ State transition diagram:
     - Sampling is conducted only once after each power on/reset. So the adjustment of potentiometers is not detected until next microcontroller reset/restart.
     - This program does not use the low noise mode while sampling potentiometer values. However for better sampling results an averaged value of several (configurable by preprocessor define) samplings is calculated. In addition for every potentiometer an additional sampling is done first to stabilize the ADC, the value of this conversion is thrown.
 - The circuit should be **power**ed with 5 V (DC). In other cases maybe other and/or additional components are required. It's recommended to enable the brown-out detector to reset the microcontroller if the current falls below a certain level (maybe 4.3 V).
+
 
 ### Microcontroller connections
 Legend:
