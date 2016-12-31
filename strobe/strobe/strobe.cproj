@@ -114,8 +114,8 @@
   <avrgcc.compiler.symbols.DefSymbols>
     <ListValues>
       <Value>DEBUG</Value>
-      <Value>MAX_BUZZER_LOCKED_TIME=75</Value>
-      <Value>MAX_BUZZER_LOCKED_ADJUSTMENT=30</Value>
+      <Value>MAX_BUZZER_LOCKED_TIME=48</Value>
+      <Value>MAX_BUZZER_LOCKED_ADJUSTMENT=36</Value>
     </ListValues>
   </avrgcc.compiler.symbols.DefSymbols>
   <avrgcc.compiler.directories.IncludePaths>
