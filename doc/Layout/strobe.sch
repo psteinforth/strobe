@@ -15628,7 +15628,7 @@ housing &amp; pin compatible &lt;br/&gt;&lt;br/&gt;&lt;br/&gt;
 </class>
 </classes>
 <parts>
-<part name="IC1" library="attiny24_44_84" deviceset="ATTINY24/44/84" device="-PU"/>
+<part name="IC1" library="attiny24_44_84" deviceset="ATTINY24/44/84" device="-PU" value="ATtiny 44A-PU"/>
 <part name="C1" library="rcl" deviceset="CPOL-EU" device="E2,5-6E" value="100n"/>
 <part name="R1" library="resistor" deviceset="R-EU_" device="0207/10" value="470"/>
 <part name="R2" library="pot" deviceset="TRIM_EU-" device="CA6V" value="10k"/>
