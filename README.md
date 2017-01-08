@@ -10,7 +10,7 @@ This piece of software was designed to enable a cheap LED stroboscope by people 
 - Strobe activity time period is configurable by a potentiometer.
 - Time period between two strobe activites is potentiometer controllable.
 - Status LED for "push button active/ strobe can be enabled" and "strobe active".
-- Automatic reset if microcontroller hang-up by watchdog timer within 0.125 seconds.
+- Automatic reset in case of a microcontroller hang-up by watchdog timer within 0.125 seconds.
 
 ### Details
 - Some options are configurable by **preprocessor defines**. Default values will be used if they are not given. Meaning of preprocessor defines can be found in source code comments.
@@ -20,7 +20,7 @@ This piece of software was designed to enable a cheap LED stroboscope by people 
         - relais_enabled (output): relais is active and powers the strobe
         - buzzer_pressed (input): push-button was pressed
         - timer_counting (input): timer is active (strobe active or buzzer locked and time is not over)
-        - next_state: new state if all inputs met the current state
+        - next_state: new state that will be selected if all inputs met the current state
     - State transition matrix:
 
 State | Name | buzzer_enabled | relais_enabled | buzzer_pressed | timer_counting | next_state
@@ -41,7 +41,7 @@ State transition diagram (arrows are labeled with inputs that are required for s
 
 ### Microcontroller connections
 Legend:
-- *Italic* pins are required for In-System-Programming (ISP) via SPI. Pins printed grey are only required for ISP.
+- *Italic* pins are required for In-System-Programming (ISP) via SPI. Pins printed grey additonally are only required for ISP.
 - AREF is not connected but maybe will be used for more precise potentiometer values later. 
 ![](doc/microcontroller.png?raw=true)
 
