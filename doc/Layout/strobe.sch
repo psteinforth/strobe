@@ -15090,112 +15090,6 @@ high speed (Philips)</description>
 </deviceset>
 </devicesets>
 </library>
-<library name="trafo">
-<description>&lt;b&gt;Transformers&lt;/b&gt;&lt;p&gt;
-Based on the following previous libraries:
-&lt;ul&gt;
-&lt;li&gt;trafo-b.lbr: transformers from BLOCK
-&lt;li&gt;trafo-e.lbr: transformers from ERA
-&lt;li&gt;trafo-r.lbr: ring cores
-&lt;/ul&gt;
-&lt;author&gt;Created by librarian@cadsoft.de&lt;/author&gt;</description>
-<packages>
-<package name="VP31">
-<description>&lt;b&gt;TRANSFORMER&lt;/b&gt;&lt;p&gt;
-1 primary winding, 1 secondary winding</description>
-<wire x1="-6.35" y1="8.89" x2="-3.175" y2="8.89" width="0.254" layer="21"/>
-<wire x1="-3.175" y1="8.89" x2="-3.175" y2="-8.89" width="0.254" layer="21"/>
-<wire x1="-1.27" y1="8.89" x2="-1.27" y2="-8.89" width="0.254" layer="21"/>
-<wire x1="-1.27" y1="-8.89" x2="-3.175" y2="-8.89" width="0.254" layer="21"/>
-<wire x1="0" y1="8.89" x2="0" y2="-8.89" width="0.254" layer="21"/>
-<wire x1="1.27" y1="2.54" x2="1.27" y2="-2.54" width="0.254" layer="21"/>
-<wire x1="1.27" y1="-2.54" x2="3.175" y2="-2.54" width="0.254" layer="21"/>
-<wire x1="1.27" y1="2.54" x2="3.175" y2="2.54" width="0.254" layer="21"/>
-<wire x1="3.175" y1="-2.54" x2="3.175" y2="2.54" width="0.254" layer="21"/>
-<wire x1="3.175" y1="-2.54" x2="6.35" y2="-2.54" width="0.254" layer="21"/>
-<wire x1="3.175" y1="2.54" x2="6.35" y2="2.54" width="0.254" layer="21"/>
-<wire x1="-3.175" y1="8.89" x2="-1.27" y2="8.89" width="0.254" layer="21"/>
-<wire x1="-3.175" y1="-8.89" x2="-6.35" y2="-8.89" width="0.254" layer="21"/>
-<wire x1="-12.065" y1="-12.192" x2="-12.065" y2="-7.874" width="0.254" layer="51"/>
-<wire x1="-12.065" y1="7.874" x2="-12.065" y2="-7.874" width="0.254" layer="21"/>
-<wire x1="-12.065" y1="7.874" x2="-12.065" y2="12.192" width="0.254" layer="51"/>
-<wire x1="-12.065" y1="-14.478" x2="-12.065" y2="-12.192" width="0.254" layer="21"/>
-<wire x1="-12.065" y1="-14.478" x2="-11.557" y2="-14.986" width="0.254" layer="21" curve="90"/>
-<wire x1="11.557" y1="-14.986" x2="12.065" y2="-14.478" width="0.254" layer="21" curve="90"/>
-<wire x1="11.557" y1="-14.986" x2="-11.557" y2="-14.986" width="0.254" layer="21"/>
-<wire x1="11.557" y1="14.986" x2="12.065" y2="14.478" width="0.254" layer="21" curve="-90"/>
-<wire x1="-12.065" y1="14.478" x2="-11.557" y2="14.986" width="0.254" layer="21" curve="-90"/>
-<wire x1="-12.065" y1="14.478" x2="-12.065" y2="12.192" width="0.254" layer="21"/>
-<wire x1="-11.557" y1="14.986" x2="11.557" y2="14.986" width="0.254" layer="21"/>
-<wire x1="-17.526" y1="-20.574" x2="17.526" y2="-20.574" width="0.254" layer="21"/>
-<wire x1="-17.526" y1="20.574" x2="-17.526" y2="-20.574" width="0.254" layer="21"/>
-<wire x1="-17.526" y1="20.574" x2="17.526" y2="20.574" width="0.254" layer="21"/>
-<wire x1="17.526" y1="-20.574" x2="17.526" y2="20.574" width="0.254" layer="21"/>
-<wire x1="12.065" y1="-14.478" x2="12.065" y2="-6.858" width="0.254" layer="21"/>
-<wire x1="12.065" y1="-3.175" x2="12.065" y2="-6.858" width="0.254" layer="51"/>
-<wire x1="12.065" y1="-3.175" x2="12.065" y2="3.175" width="0.254" layer="21"/>
-<wire x1="12.065" y1="6.858" x2="12.065" y2="3.175" width="0.254" layer="51"/>
-<wire x1="12.065" y1="6.858" x2="12.065" y2="14.478" width="0.254" layer="21"/>
-<circle x="-4.445" y="-8.001" radius="0.254" width="0.254" layer="21"/>
-<circle x="4.445" y="-1.651" radius="0.254" width="0.254" layer="21"/>
-<circle x="-6.985" y="-8.89" radius="0.635" width="0.254" layer="21"/>
-<circle x="-6.985" y="8.89" radius="0.635" width="0.254" layer="21"/>
-<circle x="6.985" y="-2.54" radius="0.635" width="0.254" layer="21"/>
-<circle x="6.985" y="2.54" radius="0.635" width="0.254" layer="21"/>
-<pad name="3" x="12.4968" y="-5.0038" drill="1.3208" diameter="3.175" shape="octagon"/>
-<pad name="4" x="12.4968" y="5.0038" drill="1.3208" diameter="3.175" shape="octagon"/>
-<pad name="2" x="-12.4968" y="-10.0076" drill="1.3208" diameter="3.81" shape="octagon"/>
-<pad name="1" x="-12.4968" y="10.0076" drill="1.3208" diameter="3.81" shape="octagon"/>
-<text x="-17.145" y="21.59" size="2.54" layer="25" ratio="10">&gt;NAME</text>
-<text x="-6.35" y="-13.335" size="2.54" layer="27" ratio="10">&gt;VALUE</text>
-<text x="-8.255" y="-6.35" size="1.778" layer="21" ratio="10">P1</text>
-<text x="5.715" y="-1.27" size="1.778" layer="21" ratio="10">S1</text>
-<text x="-4.445" y="16.51" size="2.54" layer="21" ratio="10">VP31</text>
-<rectangle x1="-3.175" y1="-8.89" x2="-1.27" y2="8.89" layer="21"/>
-<rectangle x1="1.27" y1="-2.54" x2="3.175" y2="2.54" layer="21"/>
-</package>
-</packages>
-<symbols>
-<symbol name="T1P1S">
-<wire x1="1.27" y1="5.207" x2="1.27" y2="-7.747" width="0.254" layer="94"/>
-<circle x="-2.921" y="-8.636" radius="0.127" width="0.3048" layer="94"/>
-<circle x="5.461" y="-5.842" radius="0.127" width="0.3048" layer="94"/>
-<text x="-2.54" y="7.366" size="1.778" layer="95">&gt;NAME</text>
-<text x="-2.54" y="-10.795" size="1.778" layer="96">&gt;VALUE</text>
-<text x="-3.175" y="-2.54" size="1.27" layer="94" rot="R90">PRI</text>
-<text x="6.985" y="-2.54" size="1.27" layer="94" rot="R90">SEC</text>
-<rectangle x1="-2.286" y1="-7.62" x2="0.254" y2="5.08" layer="94"/>
-<rectangle x1="2.286" y1="-5.08" x2="4.826" y2="2.54" layer="94"/>
-<pin name="P1" x="-5.08" y="5.08" visible="pad" length="middle" direction="pas" swaplevel="1"/>
-<pin name="P2" x="-5.08" y="-7.62" visible="pad" length="middle" direction="pas" swaplevel="1"/>
-<pin name="S3" x="7.62" y="-5.08" visible="pad" length="middle" direction="pas" swaplevel="2" rot="R180"/>
-<pin name="S4" x="7.62" y="2.54" visible="pad" length="middle" direction="pas" swaplevel="2" rot="R180"/>
-</symbol>
-</symbols>
-<devicesets>
-<deviceset name="VP31" prefix="TR" uservalue="yes">
-<description>&lt;b&gt;TRANSFORMER&lt;/b&gt;&lt;p&gt;
-1 primary winding, 1 secondary winding&lt;p&gt;
-BLOCK</description>
-<gates>
-<gate name="1" symbol="T1P1S" x="0" y="0"/>
-</gates>
-<devices>
-<device name="" package="VP31">
-<connects>
-<connect gate="1" pin="P1" pad="1"/>
-<connect gate="1" pin="P2" pad="2"/>
-<connect gate="1" pin="S3" pad="3"/>
-<connect gate="1" pin="S4" pad="4"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
-</devicesets>
-</library>
 <library name="supply2">
 <description>&lt;b&gt;Supply Symbols&lt;/b&gt;&lt;p&gt;
 GND, VCC, 0V, +5V, -5V, etc.&lt;p&gt;
@@ -15605,6 +15499,125 @@ Source: http://www.farnell.com/datasheets/87634.pdf</description>
 </deviceset>
 </devicesets>
 </library>
+<library name="frames">
+<description>&lt;b&gt;Frames for Sheet and Layout&lt;/b&gt;</description>
+<packages>
+</packages>
+<symbols>
+<symbol name="A4L-LOC">
+<wire x1="256.54" y1="3.81" x2="256.54" y2="8.89" width="0.1016" layer="94"/>
+<wire x1="256.54" y1="8.89" x2="256.54" y2="13.97" width="0.1016" layer="94"/>
+<wire x1="256.54" y1="13.97" x2="256.54" y2="19.05" width="0.1016" layer="94"/>
+<wire x1="256.54" y1="19.05" x2="256.54" y2="24.13" width="0.1016" layer="94"/>
+<wire x1="161.29" y1="3.81" x2="161.29" y2="24.13" width="0.1016" layer="94"/>
+<wire x1="161.29" y1="24.13" x2="215.265" y2="24.13" width="0.1016" layer="94"/>
+<wire x1="215.265" y1="24.13" x2="256.54" y2="24.13" width="0.1016" layer="94"/>
+<wire x1="246.38" y1="3.81" x2="246.38" y2="8.89" width="0.1016" layer="94"/>
+<wire x1="246.38" y1="8.89" x2="256.54" y2="8.89" width="0.1016" layer="94"/>
+<wire x1="246.38" y1="8.89" x2="215.265" y2="8.89" width="0.1016" layer="94"/>
+<wire x1="215.265" y1="8.89" x2="215.265" y2="3.81" width="0.1016" layer="94"/>
+<wire x1="215.265" y1="8.89" x2="215.265" y2="13.97" width="0.1016" layer="94"/>
+<wire x1="215.265" y1="13.97" x2="256.54" y2="13.97" width="0.1016" layer="94"/>
+<wire x1="215.265" y1="13.97" x2="215.265" y2="19.05" width="0.1016" layer="94"/>
+<wire x1="215.265" y1="19.05" x2="256.54" y2="19.05" width="0.1016" layer="94"/>
+<wire x1="215.265" y1="19.05" x2="215.265" y2="24.13" width="0.1016" layer="94"/>
+<text x="217.17" y="15.24" size="2.54" layer="94">&gt;DRAWING_NAME</text>
+<text x="217.17" y="10.16" size="2.286" layer="94">&gt;LAST_DATE_TIME</text>
+<text x="230.505" y="5.08" size="2.54" layer="94">&gt;SHEET</text>
+<text x="216.916" y="4.953" size="2.54" layer="94">Sheet:</text>
+<frame x1="0" y1="0" x2="260.35" y2="179.07" columns="6" rows="4" layer="94"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="A4L-LOC" prefix="FRAME" uservalue="yes">
+<description>&lt;b&gt;FRAME&lt;/b&gt;&lt;p&gt;
+DIN A4, landscape with location and doc. field</description>
+<gates>
+<gate name="G$1" symbol="A4L-LOC" x="0" y="0"/>
+</gates>
+<devices>
+<device name="">
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
+<library name="meanwell_irm_v5">
+<description>Meanwell OnBoard Power Supplies. Serie: IRM</description>
+<packages>
+<package name="IRM_05/10">
+<wire x1="-22.85" y1="-12.7" x2="-22.85" y2="12.7" width="0.127" layer="21"/>
+<wire x1="-22.85" y1="12.7" x2="22.85" y2="12.7" width="0.127" layer="21"/>
+<wire x1="22.85" y1="12.7" x2="22.85" y2="-12.7" width="0.127" layer="21"/>
+<wire x1="22.85" y1="-12.7" x2="-22.85" y2="-12.7" width="0.127" layer="21"/>
+<text x="-2.54" y="1.27" size="1.27" layer="25">&gt;NAME</text>
+<text x="-2.54" y="-2.54" size="1.27" layer="27">&gt;VALUE</text>
+<pad name="AC/L" x="-19.25" y="-9.25" drill="1.3" diameter="2.54"/>
+<pad name="AC/N" x="-19.25" y="1.5" drill="1.3" diameter="2.54"/>
+<pad name="V-" x="19.25" y="-9.25" drill="1.3" diameter="2.54"/>
+<pad name="V+" x="19.25" y="-1.25" drill="1.3" diameter="2.54"/>
+<text x="-15.24" y="-10.16" size="1.27" layer="21">AC/L</text>
+<text x="-15.24" y="1.27" size="1.27" layer="21">AC/N</text>
+<text x="12.7" y="-1.27" size="1.27" layer="21">V+</text>
+<text x="12.7" y="-10.16" size="1.27" layer="21">V-</text>
+</package>
+</packages>
+<symbols>
+<symbol name="IRM">
+<wire x1="-10.16" y1="-10.16" x2="10.16" y2="-10.16" width="0.254" layer="94"/>
+<wire x1="10.16" y1="-10.16" x2="10.16" y2="10.16" width="0.254" layer="94"/>
+<wire x1="10.16" y1="10.16" x2="-10.16" y2="10.16" width="0.254" layer="94"/>
+<wire x1="-10.16" y1="10.16" x2="-10.16" y2="-10.16" width="0.254" layer="94"/>
+<pin name="AC/L" x="-12.7" y="-7.62" length="short" direction="in"/>
+<pin name="AC/N" x="-12.7" y="7.62" length="short" direction="in"/>
+<pin name="V+" x="12.7" y="7.62" length="short" direction="out" rot="R180"/>
+<pin name="V-" x="12.7" y="-7.62" length="short" direction="out" rot="R180"/>
+<text x="-7.62" y="12.7" size="1.778" layer="95">&gt;NAME</text>
+<text x="-7.62" y="-15.24" size="1.778" layer="96">&gt;VALUE</text>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="IRM_05/10" uservalue="yes">
+<description>&lt;b&gt;5 or 10 watt&lt;/b&gt; &lt;br/&gt;
+housing &amp; pin compatible &lt;br/&gt;&lt;br/&gt;&lt;br/&gt;
+
+&lt;b&gt;IRM 05&lt;/b&gt;
+&lt;pre&gt;Vout [V]     Imax [A]     Pmax [W]     Eff [%]
+3.3          1.25         4.125        68
+5            1            5            71
+12           0.42         5.04         75
+15           0.33         4.95         75
+24           0.23         5.52         77&lt;/pre&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;
+
+&lt;b&gt;IRM 10&lt;/b&gt;
+&lt;pre&gt;Vout [V]     Imax [A]     Pmax [W]     Eff [%]
+3.3          2.5           8.25        74
+5            2            10           77
+12           0.85         10.2         82
+15           0.67         10.05        82
+24           0.42         10.08        82&lt;/pre&gt;</description>
+<gates>
+<gate name="G$1" symbol="IRM" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="IRM_05/10">
+<connects>
+<connect gate="G$1" pin="AC/L" pad="AC/L"/>
+<connect gate="G$1" pin="AC/N" pad="AC/N"/>
+<connect gate="G$1" pin="V+" pad="V+"/>
+<connect gate="G$1" pin="V-" pad="V-"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 </libraries>
 <attributes>
 </attributes>
@@ -15618,12 +15631,11 @@ Source: http://www.farnell.com/datasheets/87634.pdf</description>
 <part name="IC1" library="attiny24_44_84" deviceset="ATTINY24/44/84" device="-PU"/>
 <part name="C1" library="rcl" deviceset="CPOL-EU" device="E2,5-6E" value="100n"/>
 <part name="R1" library="resistor" deviceset="R-EU_" device="0207/10" value="470"/>
-<part name="R2" library="pot" deviceset="TRIM_EU-" device="CA6V" value="wait"/>
+<part name="R2" library="pot" deviceset="TRIM_EU-" device="CA6V" value="10k"/>
 <part name="S1" library="switch-omron" deviceset="10-XX" device="" value="enable"/>
 <part name="LED1" library="led" deviceset="LED" device="3MM" value="enabled"/>
 <part name="T1" library="transistor" deviceset="BC337" device=""/>
 <part name="D1" library="diode" deviceset="1N4148" device="DO35-7" value="1N4148"/>
-<part name="IRM-05-5" library="trafo" deviceset="VP31" device=""/>
 <part name="SUPPLY1" library="supply2" deviceset="+5V" device=""/>
 <part name="GND1" library="supply1" deviceset="GND" device=""/>
 <part name="LINE" library="con-wago-500" deviceset="W237-102" device=""/>
@@ -15635,7 +15647,7 @@ Source: http://www.farnell.com/datasheets/87634.pdf</description>
 <part name="R3" library="resistor" deviceset="R-EU_" device="0207/10" value="150"/>
 <part name="GND4" library="supply1" deviceset="GND" device=""/>
 <part name="SUPPLY4" library="supply2" deviceset="+5V" device=""/>
-<part name="R4" library="pot" deviceset="TRIM_EU-" device="CA6V" value="active"/>
+<part name="R4" library="pot" deviceset="TRIM_EU-" device="CA6V" value="10k"/>
 <part name="GND5" library="supply1" deviceset="GND" device=""/>
 <part name="S2" library="switch-omron" deviceset="10-XX" device="" value="reset"/>
 <part name="R6" library="resistor" deviceset="R-EU_" device="0207/10" value="10k"/>
@@ -15643,10 +15655,14 @@ Source: http://www.farnell.com/datasheets/87634.pdf</description>
 <part name="R5" library="resistor" deviceset="R-EU_" device="0207/10" value="150"/>
 <part name="LIGHT" library="con-wago-500" deviceset="W237-102" device=""/>
 <part name="BUZZER" library="con-wago-500" deviceset="W237-102" device=""/>
+<part name="FRAME1" library="frames" deviceset="A4L-LOC" device=""/>
+<part name="U$1" library="meanwell_irm_v5" deviceset="IRM_05/10" device="" value="IRM-05-5"/>
 </parts>
 <sheets>
 <sheet>
 <plain>
+<text x="215.9" y="-5.08" size="1.778" layer="91">blink</text>
+<text x="215.9" y="15.24" size="1.778" layer="91">wait</text>
 </plain>
 <instances>
 <instance part="IC1" gate="1" x="88.9" y="55.88"/>
@@ -15657,11 +15673,10 @@ Source: http://www.farnell.com/datasheets/87634.pdf</description>
 <instance part="LED1" gate="G$1" x="193.04" y="63.5" rot="R90"/>
 <instance part="T1" gate="G$1" x="175.26" y="7.62"/>
 <instance part="D1" gate="G$1" x="210.82" y="27.94" rot="R90"/>
-<instance part="IRM-05-5" gate="1" x="91.44" y="0"/>
-<instance part="SUPPLY1" gate="+5V" x="104.14" y="7.62"/>
+<instance part="SUPPLY1" gate="+5V" x="104.14" y="15.24"/>
 <instance part="GND1" gate="1" x="104.14" y="-10.16"/>
-<instance part="LINE" gate="-1" x="76.2" y="2.54"/>
-<instance part="LINE" gate="-2" x="76.2" y="-2.54"/>
+<instance part="LINE" gate="-1" x="53.34" y="5.08"/>
+<instance part="LINE" gate="-2" x="53.34" y="0"/>
 <instance part="SUPPLY2" gate="+5V" x="66.04" y="58.42"/>
 <instance part="GND2" gate="1" x="66.04" y="35.56"/>
 <instance part="JP1" gate="A" x="157.48" y="-25.4"/>
@@ -15682,6 +15697,8 @@ Source: http://www.farnell.com/datasheets/87634.pdf</description>
 <instance part="LIGHT" gate="-2" x="266.7" y="38.1" rot="R180"/>
 <instance part="BUZZER" gate="-1" x="231.14" y="83.82" rot="R180"/>
 <instance part="BUZZER" gate="-2" x="231.14" y="78.74" rot="R180"/>
+<instance part="FRAME1" gate="G$1" x="40.64" y="-60.96"/>
+<instance part="U$1" gate="G$1" x="78.74" y="2.54"/>
 </instances>
 <busses>
 </busses>
@@ -15689,17 +15706,16 @@ Source: http://www.farnell.com/datasheets/87634.pdf</description>
 <net name="N$1" class="0">
 <segment>
 <pinref part="LINE" gate="-1" pin="KL"/>
-<pinref part="IRM-05-5" gate="1" pin="P1"/>
-<wire x1="81.28" y1="2.54" x2="81.28" y2="5.08" width="0.1524" layer="91"/>
-<wire x1="81.28" y1="5.08" x2="86.36" y2="5.08" width="0.1524" layer="91"/>
+<wire x1="58.42" y1="5.08" x2="58.42" y2="10.16" width="0.1524" layer="91"/>
+<pinref part="U$1" gate="G$1" pin="AC/N"/>
+<wire x1="58.42" y1="10.16" x2="66.04" y2="10.16" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$2" class="0">
 <segment>
 <pinref part="LINE" gate="-2" pin="KL"/>
-<pinref part="IRM-05-5" gate="1" pin="P2"/>
-<wire x1="81.28" y1="-2.54" x2="81.28" y2="-7.62" width="0.1524" layer="91"/>
-<wire x1="81.28" y1="-7.62" x2="86.36" y2="-7.62" width="0.1524" layer="91"/>
+<wire x1="58.42" y1="0" x2="58.42" y2="-5.08" width="0.1524" layer="91"/>
+<wire x1="58.42" y1="-5.08" x2="66.04" y2="-5.08" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="GND" class="0">
@@ -15714,10 +15730,10 @@ Source: http://www.farnell.com/datasheets/87634.pdf</description>
 <junction x="73.66" y="40.64"/>
 </segment>
 <segment>
-<pinref part="IRM-05-5" gate="1" pin="S3"/>
 <pinref part="GND1" gate="1" pin="GND"/>
-<wire x1="99.06" y1="-5.08" x2="104.14" y2="-5.08" width="0.1524" layer="91"/>
 <wire x1="104.14" y1="-5.08" x2="104.14" y2="-7.62" width="0.1524" layer="91"/>
+<pinref part="U$1" gate="G$1" pin="V-"/>
+<wire x1="104.14" y1="-5.08" x2="91.44" y2="-5.08" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="LED1" gate="G$1" pin="C"/>
@@ -15772,10 +15788,9 @@ Source: http://www.farnell.com/datasheets/87634.pdf</description>
 <wire x1="73.66" y1="83.82" x2="106.68" y2="83.82" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="IRM-05-5" gate="1" pin="S4"/>
 <pinref part="SUPPLY1" gate="+5V" pin="+5V"/>
-<wire x1="99.06" y1="2.54" x2="104.14" y2="2.54" width="0.1524" layer="91"/>
-<wire x1="104.14" y1="2.54" x2="104.14" y2="5.08" width="0.1524" layer="91"/>
+<wire x1="91.44" y1="10.16" x2="104.14" y2="10.16" width="0.1524" layer="91"/>
+<wire x1="104.14" y1="10.16" x2="104.14" y2="12.7" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="K1" gate="K" pin="1"/>
