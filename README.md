@@ -52,5 +52,5 @@ Legend:
 ![](doc/pictures/conductor_board_case.JPG?raw=true)
 
 ### Known issues
-- __External Interrupt enabled unintentional__
+- __External Interrupt enabled unintentional.__
 Under some circumstances (noisy environments) the external interrupt is triggered by electrical interferences. This maybe could be solved by implementing a debouncing algorithm to detect button presses and/or additonal hardware like external pull up resistors, a low pass filter or capacitors at the right place.
